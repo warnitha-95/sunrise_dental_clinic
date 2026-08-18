@@ -1,0 +1,310 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    /* Professional dental background */
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.25), transparent 35%),
+        linear-gradient(135deg, #0077b6, #00b4d8, #48cae4);
+}
+
+/* Main Login Container */
+.container {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    background: #ffffff;
+    padding: 35px 38px;
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 55, 90, 0.20);
+
+    animation: containerShow 0.6s ease;
+}
+
+/* Logo Section */
+.logo-section {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.logo {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    border-radius: 50%;
+
+    color: #ffffff;
+    font-size: 36px;
+
+    box-shadow: 0 8px 20px rgba(0, 119, 182, 0.25);
+}
+
+/* Clinic Name */
+.clinic-name {
+    font-size: 21px;
+    font-weight: 700;
+    color: #023e8a;
+    letter-spacing: 0.3px;
+}
+
+.clinic-subtitle {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+}
+
+/* Title */
+.container .title {
+    font-size: 25px;
+    font-weight: 600;
+    color: #023e8a;
+    position: relative;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+}
+
+.container .title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    height: 4px;
+    width: 45px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        90deg,
+        #0077b6,
+        #00b4d8
+    );
+}
+
+/* Input Box */
+.input-box {
+    margin: 17px 0;
+}
+
+.input-box span.details {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334e68;
+    margin-bottom: 7px;
+}
+
+/* Input */
+.input-box input {
+    height: 48px;
+    width: 100%;
+
+    outline: none;
+
+    font-size: 15px;
+    color: #334e68;
+
+    border-radius: 10px;
+    padding: 0 15px;
+
+    background: #f8fbfd;
+
+    border: 1px solid #d8e5ec;
+
+    transition: all 0.3s ease;
+}
+
+.input-box input::placeholder {
+    color: #9aaab5;
+}
+
+.input-box input:focus {
+    border-color: #00a8cc;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 180, 216, 0.12);
+}
+
+/* Forgot Password */
+.pass {
+    text-align: right;
+    margin: 8px 0 20px;
+}
+
+.pass a {
+    color: #0077b6;
+    font-size: 13px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.pass a:hover {
+    color: #00a8cc;
+    text-decoration: underline;
+}
+
+/* Login Button */
+.button {
+    margin-top: 8px;
+}
+
+.button input {
+    height: 50px;
+    width: 100%;
+
+    border-radius: 10px;
+    border: none;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+        135deg,
+        #0077b6,
+        #00b4d8
+    );
+
+    box-shadow:
+        0 8px 18px rgba(0, 119, 182, 0.20);
+
+    transition: all 0.3s ease;
+}
+
+.button input:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(
+        135deg,
+        #005f91,
+        #0096c7
+    );
+
+    box-shadow:
+        0 12px 25px rgba(0, 119, 182, 0.30);
+}
+
+.button input:active {
+    transform: translateY(0);
+}
+
+/* Signup */
+.signup-link {
+    text-align: center;
+    margin-top: 22px;
+
+    font-size: 13px;
+    color: #718096;
+}
+
+.signup-link a {
+    color: #0077b6;
+    text-decoration: none;
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.signup-link a:hover {
+    color: #00a8cc;
+    text-decoration: underline;
+}
+
+/* System Message */
+.system-message {
+    padding: 11px 14px;
+    margin-bottom: 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.system-message.success {
+    color: #087f5b;
+    background: #e6fcf5;
+    border: 1px solid #96f2d7;
+}
+
+.system-message.error {
+    color: #c92a2a;
+    background: #fff5f5;
+    border: 1px solid #ffc9c9;
+}
+
+.system-message.warning {
+    color: #e67700;
+    background: #fff9db;
+    border: 1px solid #ffe066;
+}
+
+/* Animation */
+@keyframes containerShow {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 28px 24px;
+        border-radius: 15px;
+    }
+
+    .logo {
+        width: 65px;
+        height: 65px;
+        font-size: 30px;
+    }
+
+    .clinic-name {
+        font-size: 19px;
+    }
+
+    .container .title {
+        font-size: 22px;
+    }
+}
