@@ -1,45 +1,35 @@
 package model;
 
-import java.sql.Timestamp;
-
 public class patient {
 
-    private String patient_id;
+    private int patient_id;
     private String patient_name;
     private String address;
     private String contact_number;
     private String gender;
-    private Timestamp register_datetime;
+    private java.sql.Timestamp register_datetime;
     private String status;
-
-    // Default constructor
     public patient() {
     }
 
-    // Parameterized constructor
-    public patient(
-            String patient_id,
-            String patient_name,
-            String address,
-            String contact_number,
-            String gender,
-            Timestamp register_datetime,
-            String status) {
+    public patient(String patient_name,
+                   String address,
+                   String contact_number,
+                   String gender,
+                   String status) {
 
-        this.patient_id = patient_id;
         this.patient_name = patient_name;
         this.address = address;
         this.contact_number = contact_number;
         this.gender = gender;
-        this.register_datetime = register_datetime;
         this.status = status;
     }
 
-    public String getPatient_id() {
+    public int getPatient_id() {
         return patient_id;
     }
 
-    public void setPatient_id(String patient_id) {
+    public void setPatient_id(int patient_id) {
         this.patient_id = patient_id;
     }
 
@@ -75,11 +65,11 @@ public class patient {
         this.gender = gender;
     }
 
-    public Timestamp getRegister_datetime() {
+    public java.sql.Timestamp getRegister_datetime() {
         return register_datetime;
     }
 
-    public void setRegister_datetime(Timestamp register_datetime) {
+    public void setRegister_datetime(java.sql.Timestamp register_datetime) {
         this.register_datetime = register_datetime;
     }
 
@@ -89,18 +79,5 @@ public class patient {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "patient{" +
-                "patient_id='" + patient_id + '\'' +
-                ", patient_name='" + patient_name + '\'' +
-                ", address='" + address + '\'' +
-                ", contact_number='" + contact_number + '\'' +
-                ", gender='" + gender + '\'' +
-                ", register_datetime=" + register_datetime +
-                ", status='" + status + '\'' +
-                '}';
     }
 }
