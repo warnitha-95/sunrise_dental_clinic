@@ -19,10 +19,6 @@ public class managePatients extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    public managePatients() {
-        super();
-    }
-
     @Override
     protected void doGet(
             HttpServletRequest request,
@@ -34,63 +30,61 @@ public class managePatients extends HttpServlet {
         if (session == null ||
             session.getAttribute("loggedInAdmin") == null) {
 
-            response.sendRedirect("adminlogin.jsp");
+            response.sendRedirect(
+                request.getContextPath() + "/adminlogin.jsp"
+            );
+
             return;
         }
 
-        String keyword = request.getParameter("keyword");
         patientService service = new patientService();
+
+        String keyword = request.getParameter("keyword");
+
         ArrayList<patient> patientList;
 
-
         if (keyword != null && !keyword.trim().isEmpty()) {
-            patientList =
-                    service.searchPatients(keyword.trim());
+
+            keyword = keyword.trim();
+
+            patientList = service.searchPatients(keyword);
+
         } else {
 
-            patientList =
-                    service.getAllPatients();
+            keyword = "";
+
+            patientList = service.getAllPatients();
+
         }
 
         if (patientList == null) {
+
             patientList = new ArrayList<patient>();
+
         }
 
-        System.out.println(
-                "======================================"
-        );
-
-        System.out.println(
-                "Manage Patients Servlet"
-        );
-
-        System.out.println(
-                "Patients loaded: "
-                + patientList.size()
-        );
-
-        System.out.println(
-                "======================================"
+        request.setAttribute(
+            "patientList",
+            patientList
         );
 
         request.setAttribute(
-                "patientList",
-                patientList
+            "keyword",
+            keyword
         );
 
         request.setAttribute(
-                "totalPatients",
-                patientList.size()
+            "totalPatients",
+            patientList.size()
         );
 
         RequestDispatcher dispatcher =
-                request.getRequestDispatcher(
-                        "managepatients.jsp"
-                );
+            request.getRequestDispatcher(
+                "/managepatients.jsp"
+            );
 
         dispatcher.forward(request, response);
     }
-
 
     @Override
     protected void doPost(

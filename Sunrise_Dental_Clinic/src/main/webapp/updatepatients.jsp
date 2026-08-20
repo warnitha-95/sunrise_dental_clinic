@@ -1,22 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    HttpSession sessionObj = request.getSession(false);
-    if (sessionObj == null || sessionObj.getAttribute("loggedInAdmin") == null) {
-        response.sendRedirect("adminlogin.jsp");
-        return;
-    }
-    String adminName = (String) sessionObj.getAttribute("loggedInAdmin");
-    String error = (String) sessionObj.getAttribute("error");
-    sessionObj.removeAttribute("error");
+HttpSession sessionObj = request.getSession(false);
+if (sessionObj == null || sessionObj.getAttribute("loggedInAdmin") == null) {
+    response.sendRedirect("adminlogin.jsp");
+    return;
+}
+String adminName = (String) sessionObj.getAttribute("loggedInAdmin");
+String error = (String) sessionObj.getAttribute("error");
+sessionObj.removeAttribute("error");
+Object patientIdObj = request.getAttribute("patient_id");
+String patientId = patientIdObj != null ? String.valueOf(patientIdObj) : "";
+String patientName = request.getAttribute("patient_name") != null ? String.valueOf(request.getAttribute("patient_name")) : "";
+String address = request.getAttribute("address") != null ? String.valueOf(request.getAttribute("address")) : "";
+String contactNumber = request.getAttribute("contact_number") != null ? String.valueOf(request.getAttribute("contact_number")) : "";
+String gender = request.getAttribute("gender") != null ? String.valueOf(request.getAttribute("gender")) : "";
+String status = request.getAttribute("status") != null ? String.valueOf(request.getAttribute("status")) : "Active";
+String registeredDatetime = request.getAttribute("registered_datetime") != null ? String.valueOf(request.getAttribute("registered_datetime")) : "";
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Patient | Sunrise Dental Clinic</title>
+    <title>Update Patient | Sunrise Dental Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="CSS/addpatient.css">
+    <link rel="stylesheet" href="CSS/updatepatients.css">
 </head>
 <body>
 <div class="sidebar" id="sidebar">
@@ -82,8 +90,8 @@
             </button>
             <div class="header-title">
                 <h2>
-                    <i class="fas fa-user-plus"></i>
-                    Add Patient
+                    <i class="fas fa-user-pen"></i>
+                    Update Patient
                 </h2>
             </div>
         </div>
@@ -100,11 +108,11 @@
     <section class="page-heading">
         <div class="heading-left">
             <div class="heading-icon">
-                <i class="fas fa-user-plus"></i>
+                <i class="fas fa-user-pen"></i>
             </div>
             <div>
-                <h1>Register New Patient</h1>
-                <p>Enter patient information to create a new clinic record.</p>
+                <h1>Update Patient</h1>
+                <p>Modify the patient's information and save the changes.</p>
             </div>
         </div>
         <a href="<%= request.getContextPath() %>/managePatients" class="primary-btn">
@@ -113,18 +121,18 @@
         </a>
     </section>
     <% if (error != null && !error.trim().isEmpty()) { %>
-        <div class="alert error-alert" id="errorAlert">
-            <div class="alert-icon">
-                <i class="fas fa-circle-exclamation"></i>
-            </div>
-            <div class="alert-content">
-                <strong>Unable to Register Patient</strong>
-                <span><%= error %></span>
-            </div>
-            <button type="button" class="alert-close" onclick="closeAlert('errorAlert')">
-                <i class="fas fa-xmark"></i>
-            </button>
+    <div class="alert error-alert" id="errorAlert">
+        <div class="alert-icon">
+            <i class="fas fa-circle-exclamation"></i>
         </div>
+        <div class="alert-content">
+            <strong>Unable to Update Patient</strong>
+            <span><%= error %></span>
+        </div>
+        <button type="button" class="alert-close" onclick="closeAlert('errorAlert')">
+            <i class="fas fa-xmark"></i>
+        </button>
+    </div>
     <% } %>
     <section class="form-page">
         <div class="form-header">
@@ -133,67 +141,63 @@
             </div>
             <div>
                 <h2>Patient Information</h2>
-                <p>Complete the patient details below.</p>
+                <p>Update the patient details below.</p>
             </div>
         </div>
-        <form action="<%= request.getContextPath() %>/addPatients" method="post" class="patient-form" id="patientForm" autocomplete="off">
+        <form action="<%= request.getContextPath() %>/updatePatients" method="post" class="patient-form" id="patientForm" autocomplete="off">
             <div class="form-grid">
                 <div class="form-group">
-                    <label class="form-label" for="patient_name">
-                        Patient Name
-                        <span class="required">*</span>
-                    </label>
+                    <label class="form-label" for="patient_id">Patient ID</label>
                     <div class="input-wrapper">
-                        <input type="text" id="patient_name" name="patient_name" class="form-control" placeholder="Enter patient's full name" maxlength="100" required>
+                        <input type="text" id="patient_id" name="patient_id" class="form-control readonly-field" value="<%= patientId %>" readonly>
+                        <i class="fas fa-id-badge"></i>
+                    </div>
+                    <span class="input-help">Patient ID is automatically generated and cannot be changed.</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="patient_name">Patient Name <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="patient_name" name="patient_name" class="form-control" value="<%= patientName %>" placeholder="Enter patient's full name" maxlength="100" required>
                         <i class="fas fa-user"></i>
                     </div>
                     <span class="input-help">Enter the patient's full name.</span>
                 </div>
                 <div class="form-group full-width">
-                    <label class="form-label" for="address">
-                        Address
-                        <span class="required">*</span>
-                    </label>
+                    <label class="form-label" for="address">Address <span class="required">*</span></label>
                     <div class="input-wrapper">
-                        <textarea id="address" name="address" class="form-control" placeholder="Enter patient's residential address" maxlength="255" required></textarea>
+                        <textarea id="address" name="address" class="form-control" placeholder="Enter patient's residential address" maxlength="255" required><%= address %></textarea>
                         <i class="fas fa-location-dot"></i>
                     </div>
                     <span class="input-help">Enter the patient's current residential address.</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="contact_number">
-                        Contact Number
-                        <span class="required">*</span>
-                    </label>
+                    <label class="form-label" for="contact_number">Contact Number <span class="required">*</span></label>
                     <div class="input-wrapper">
-                        <input type="tel" id="contact_number" name="contact_number" class="form-control" placeholder="0771234567" maxlength="10" inputmode="numeric" required>
+                        <input type="tel" id="contact_number" name="contact_number" class="form-control" value="<%= contactNumber %>" placeholder="0771234567" maxlength="10" inputmode="numeric" required>
                         <i class="fas fa-phone"></i>
                     </div>
                     <span class="input-help">Enter a 10-digit Sri Lankan mobile number.</span>
                     <span class="validation-message" id="phoneError">Enter a valid 10-digit contact number.</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">
-                        Gender
-                        <span class="required">*</span>
-                    </label>
+                    <label class="form-label">Gender <span class="required">*</span></label>
                     <div class="gender-options">
                         <div class="gender-option">
-                            <input type="radio" id="male" name="gender" value="Male" required>
+                            <input type="radio" id="male" name="gender" value="Male" <%= "Male".equalsIgnoreCase(gender) ? "checked" : "" %> required>
                             <label for="male" class="gender-label">
                                 <i class="fas fa-mars"></i>
                                 <span>Male</span>
                             </label>
                         </div>
                         <div class="gender-option">
-                            <input type="radio" id="female" name="gender" value="Female">
+                            <input type="radio" id="female" name="gender" value="Female" <%= "Female".equalsIgnoreCase(gender) ? "checked" : "" %>>
                             <label for="female" class="gender-label">
                                 <i class="fas fa-venus"></i>
                                 <span>Female</span>
                             </label>
                         </div>
                         <div class="gender-option">
-                            <input type="radio" id="other" name="gender" value="Other">
+                            <input type="radio" id="other" name="gender" value="Other" <%= "Other".equalsIgnoreCase(gender) ? "checked" : "" %>>
                             <label for="other" class="gender-label">
                                 <i class="fas fa-user"></i>
                                 <span>Other</span>
@@ -202,20 +206,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">
-                        Status
-                        <span class="required">*</span>
-                    </label>
+                    <label class="form-label">Status <span class="required">*</span></label>
                     <div class="status-options">
                         <div class="status-option active-option">
-                            <input type="radio" id="active" name="status" value="Active" checked required>
+                            <input type="radio" id="active" name="status" value="Active" <%= "Active".equalsIgnoreCase(status) ? "checked" : "" %> required>
                             <label for="active" class="status-label">
                                 <span class="status-dot"></span>
                                 Active
                             </label>
                         </div>
                         <div class="status-option inactive-option">
-                            <input type="radio" id="inactive" name="status" value="Inactive">
+                            <input type="radio" id="inactive" name="status" value="Inactive" <%= "Inactive".equalsIgnoreCase(status) ? "checked" : "" %>>
                             <label for="inactive" class="status-label">
                                 <span class="status-dot"></span>
                                 Inactive
@@ -226,10 +227,10 @@
                 <div class="form-group">
                     <label class="form-label">Registered Date &amp; Time</label>
                     <div class="input-wrapper">
-                        <input type="text" class="form-control readonly-field" value="Automatically generated" readonly>
+                        <input type="text" class="form-control readonly-field" value="<%= registeredDatetime %>" readonly>
                         <i class="far fa-calendar"></i>
                     </div>
-                    <span class="input-help">Registration date and time will be generated automatically by the system.</span>
+                    <span class="input-help">Original registration date and time cannot be changed.</span>
                 </div>
             </div>
             <div class="form-actions">
@@ -237,9 +238,9 @@
                     <i class="fas fa-xmark"></i>
                     Cancel
                 </a>
-                <button type="submit" class="btn save-btn" id="savePatientBtn">
-                    <i class="fas fa-user-plus"></i>
-                    Register Patient
+                <button type="submit" class="btn save-btn" id="updatePatientBtn">
+                    <i class="fas fa-save"></i>
+                    Save Changes
                 </button>
             </div>
         </form>
@@ -329,10 +330,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
                 return;
             }
-            const button = document.getElementById("savePatientBtn");
+            const button = document.getElementById("updatePatientBtn");
             if (button) {
                 button.disabled = true;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             }
         });
     }
