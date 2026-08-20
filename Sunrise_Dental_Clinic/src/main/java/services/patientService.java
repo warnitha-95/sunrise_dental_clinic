@@ -6,7 +6,6 @@ import model.patient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class patientService {
@@ -79,7 +78,6 @@ public class patientService {
 
         return patientList;
     }
-
 
     public ArrayList<patient> searchPatients(String keyword) {
 
@@ -156,7 +154,6 @@ public class patientService {
         return patientList;
     }
 
-
     public patient getPatientById(int patientId) {
 
         patient pat = null;
@@ -223,7 +220,6 @@ public class patientService {
         return pat;
     }
 
-
     public boolean addPatient(patient pat) {
 
         String sql =
@@ -284,7 +280,6 @@ public class patientService {
         }
     }
 
-
     public boolean updatePatient(patient pat) {
 
         String sql =
@@ -321,9 +316,15 @@ public class patientService {
                     pat.getGender()
             );
 
+            String status = pat.getStatus();
+
+            if (status == null || status.trim().isEmpty()) {
+                status = "Active";
+            }
+
             stmt.setString(
                     5,
-                    pat.getStatus()
+                    status
             );
 
             stmt.setInt(
@@ -348,7 +349,6 @@ public class patientService {
         }
     }
 
-
     public boolean deletePatient(int patientId) {
 
         String sql =
@@ -360,7 +360,10 @@ public class patientService {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
-            stmt.setInt(1, patientId);
+            stmt.setInt(
+                    1,
+                    patientId
+            );
 
             int rows = stmt.executeUpdate();
 
