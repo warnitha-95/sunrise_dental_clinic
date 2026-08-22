@@ -69,7 +69,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/registerappointment.jsp">
+            <a href="<%= request.getContextPath() %>/newappointments.jsp">
                 <i class="fas fa-calendar-plus"></i>
                 <span>New Appointment</span>
             </a>

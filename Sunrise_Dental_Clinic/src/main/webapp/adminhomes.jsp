@@ -50,7 +50,7 @@ double totalRevenue = 0.0;
             </a>
         </li>
         <li>
-            <a href="registerappointment.jsp">
+            <a href="newappointments.jsp">
                 <i class="fas fa-calendar-plus"></i>
                 <span>New Appointment</span>
             </a>
