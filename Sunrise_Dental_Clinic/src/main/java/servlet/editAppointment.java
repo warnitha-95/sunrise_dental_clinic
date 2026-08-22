@@ -285,7 +285,7 @@ public class editAppointment extends HttpServlet {
             request.setAttribute("errorMessage", errorMessage);
 
             request.getRequestDispatcher(
-                    "/editappointment.jsp"
+                    "/editappointments.jsp"
             ).forward(
                     request,
                     response

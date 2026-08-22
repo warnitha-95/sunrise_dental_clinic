@@ -92,11 +92,7 @@ public class appointmentService {
         return treatmentList;
     }
 
-    /**
-     * Loads every appointment along with dentist name, a comma-separated
-     * list of treatment names, and the total price of those treatments.
-     * Used by the Manage Appointments list view.
-     */
+
     public ArrayList<appointment> getAllAppointments() {
 
         ArrayList<appointment> appointmentList = new ArrayList<>();

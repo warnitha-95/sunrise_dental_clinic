@@ -96,6 +96,9 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
 <div class="main-content">
     <header>
         <div class="header-left">
+            <button class="mobile-menu" id="toggleMenu">
+                <i class="fas fa-bars"></i>
+            </button>
             <div>
                 <h2>
                     <i class="fas fa-calendar-check"></i>
@@ -149,6 +152,19 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
             </div>
         </div>
 
+        <% if (!appointments.isEmpty()) { %>
+            <div class="table-toolbar">
+                <div class="search-box">
+                    <i class="fas fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        id="appointmentSearch"
+                        placeholder="Search by patient, appointment #, contact, or dentist...">
+                </div>
+                <span class="search-count" id="searchCount"></span>
+            </div>
+        <% } %>
+
         <% if (appointments.isEmpty()) { %>
 
             <div class="empty-state">
@@ -160,7 +176,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
         <% } else { %>
 
             <div class="table-wrapper">
-                <table class="appointments-table">
+                <table class="appointments-table" id="appointmentsTable">
                     <thead>
                         <tr>
                             <th>Appointment #</th>
@@ -187,6 +203,10 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                             } else {
                                 statusClass += " status-scheduled";
                             }
+
+                            String treatmentsText = (appt.getTreatmentNames() != null && !appt.getTreatmentNames().isEmpty())
+                                    ? String.join(", ", appt.getTreatmentNames())
+                                    : "-";
                         %>
                         <tr>
                             <td class="mono"><%= appt.getAppointmentNumber() %></td>
@@ -194,15 +214,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                             <td><%= appt.getContactNumber() %></td>
                             <td>Dr. <%= appt.getDentistName() %></td>
                             <td><%= appt.getAppointmentDatetime() != null ? dateFormat.format(appt.getAppointmentDatetime()) : "-" %></td>
-                            <td>
-                                <%
-                                    if (appt.getTreatmentNames() != null && !appt.getTreatmentNames().isEmpty()) {
-                                        out.print(String.join(", ", appt.getTreatmentNames()));
-                                    } else {
-                                        out.print("-");
-                                    }
-                                %>
-                            </td>
+                            <td><%= treatmentsText %></td>
                             <td>LKR <%= String.format("%,.2f", appt.getTotalPrice()) %></td>
                             <td><span class="<%= statusClass %>"><%= status %></span></td>
                             <td class="actions-cell">
@@ -242,6 +254,8 @@ if (toggleMenu) {
     });
 }
 </script>
+
+<script src="<%= request.getContextPath() %>/JS/manageappointments.js"></script>
 
 </body>
 </html>
