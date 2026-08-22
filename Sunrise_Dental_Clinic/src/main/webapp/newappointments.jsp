@@ -123,9 +123,6 @@
 
     <header>
         <div class="header-left">
-            <button class="mobile-menu" id="toggleMenu">
-                <i class="fas fa-bars"></i>
-            </button>
             <div>
                 <h2>
                     <i class="fas fa-calendar-plus"></i>
@@ -160,19 +157,11 @@
                 </h1>
 
                 <p>
-                    Enter the patient's contact number first — we'll check if
+                    Enter the patient's contact number first - we'll check if
                     they're already registered, then select the required treatments.
                 </p>
 
             </div>
-
-            <a href="<%= request.getContextPath() %>/appointments.jsp"
-               class="back-button">
-
-                <span>&larr;</span>
-                Appointments
-
-            </a>
 
         </div>
 
@@ -644,7 +633,7 @@
 
             <div class="form-actions">
 
-                <a href="<%= request.getContextPath() %>/appointments.jsp" class="cancel-button">Cancel</a>
+                <a href="<%= request.getContextPath() %>/newappointments.jsp" class="cancel-button">Cancel</a>
 
                 <button
                     type="submit"

@@ -111,9 +111,6 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
 
     <header>
         <div class="header-left">
-            <button class="mobile-menu" id="toggleMenu">
-                <i class="fas fa-bars"></i>
-            </button>
             <div>
                 <h2>
                     <i class="fas fa-pen"></i>

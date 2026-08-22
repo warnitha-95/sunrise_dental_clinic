@@ -96,9 +96,6 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
 <div class="main-content">
     <header>
         <div class="header-left">
-            <button class="mobile-menu" id="toggleMenu">
-                <i class="fas fa-bars"></i>
-            </button>
             <div>
                 <h2>
                     <i class="fas fa-calendar-check"></i>
