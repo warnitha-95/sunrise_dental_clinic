@@ -138,6 +138,35 @@ select {
     line-height: 1.5;
 }
 
+/* ---------- Patient Status Box ---------- */
+
+.patient-status-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.patient-status-box i {
+    font-size: 14px;
+}
+
+.patient-status-box.found {
+    border: 1px solid #bfe6d4;
+    background: #e6f7ee;
+    color: #1a7f4b;
+}
+
+.patient-status-box.new {
+    border: 1px solid #c7d2f4;
+    background: #eef2ff;
+    color: #3949ab;
+}
+
 /* ---------- Form Cards ---------- */
 
 .form-card {
@@ -264,6 +293,22 @@ select {
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: #aab7bd;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+    background: #f1f6f7;
+    border-color: #e2eced;
+    color: #8d9ba2;
+    cursor: not-allowed;
+}
+
+.form-group input[readonly],
+.form-group textarea[readonly] {
+    background: #f1f6f7;
+    border-color: #e2eced;
+    color: #62767f;
+    cursor: default;
 }
 
 .form-group small {

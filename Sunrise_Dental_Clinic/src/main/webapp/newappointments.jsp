@@ -123,6 +123,9 @@
 
     <header>
         <div class="header-left">
+            <button class="mobile-menu" id="toggleMenu">
+                <i class="fas fa-bars"></i>
+            </button>
             <div>
                 <h2>
                     <i class="fas fa-calendar-plus"></i>
@@ -157,8 +160,8 @@
                 </h1>
 
                 <p>
-                    Create a new patient appointment and select
-                    the required treatments.
+                    Enter the patient's contact number first — we'll check if
+                    they're already registered, then select the required treatments.
                 </p>
 
             </div>
@@ -166,7 +169,7 @@
             <a href="<%= request.getContextPath() %>/appointments.jsp"
                class="back-button">
 
-                <span>←</span>
+                <span>&larr;</span>
                 Appointments
 
             </a>
@@ -218,7 +221,8 @@
                         </h2>
 
                         <p>
-                            Enter the patient's basic details.
+                            Enter the patient's contact number first —
+                            we'll check if they're already registered.
                         </p>
 
                     </div>
@@ -226,6 +230,47 @@
                 </div>
 
                 <div class="form-grid">
+
+                    <div class="form-group full-width">
+
+                        <label for="contactNumber">
+
+                            Contact Number
+
+                            <span>*</span>
+
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="contactNumber"
+                            name="contactNumber"
+                            placeholder="0771234567"
+                            maxlength="20"
+                            autocomplete="tel"
+                            required>
+
+                        <small>
+                            Example: 0771234567
+                        </small>
+
+                    </div>
+
+                    <div class="form-group full-width">
+
+                        <div
+                            class="patient-status-box"
+                            id="patientStatusBox"
+                            style="display:none;">
+                        </div>
+
+                    </div>
+
+                    <input
+                        type="hidden"
+                        id="patientId"
+                        name="patientId"
+                        value="">
 
                     <div class="form-group full-width">
 
@@ -268,28 +313,27 @@
 
                     </div>
 
-                    <div class="form-group full-width">
+                    <div class="form-group">
 
-                        <label for="contactNumber">
+                        <label for="gender">
 
-                            Contact Number
+                            Gender
 
                             <span>*</span>
 
                         </label>
 
-                        <input
-                            type="tel"
-                            id="contactNumber"
-                            name="contactNumber"
-                            placeholder="0771234567"
-                            maxlength="20"
-                            autocomplete="tel"
+                        <select
+                            id="gender"
+                            name="gender"
                             required>
 
-                        <small>
-                            Example: 0771234567
-                        </small>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+
+                        </select>
 
                     </div>
 
@@ -600,13 +644,7 @@
 
             <div class="form-actions">
 
-                <a
-                    href="<%= request.getContextPath() %>/appointments.jsp"
-                    class="cancel-button">
-
-                    Cancel
-
-                </a>
+                <a href="<%= request.getContextPath() %>/appointments.jsp" class="cancel-button">Cancel</a>
 
                 <button
                     type="submit"
@@ -614,7 +652,7 @@
                     id="submitButton">
 
                     <span>
-                        ✓
+                        &#10003;
                     </span>
 
                     Create Appointment
@@ -628,7 +666,7 @@
     </div>
 
     <footer>
-        <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
+        <p>&copy; 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
         <span>Clinic Management System</span>
     </footer>
 
@@ -638,8 +676,101 @@
 const toggleMenu = document.getElementById("toggleMenu");
 const sidebar = document.getElementById("sidebar");
 
-toggleMenu.addEventListener("click", function() {
-    sidebar.classList.toggle("collapsed");
+if (toggleMenu) {
+    toggleMenu.addEventListener("click", function() {
+        sidebar.classList.toggle("collapsed");
+    });
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const contactInput = document.getElementById("contactNumber");
+    const nameInput = document.getElementById("patientName");
+    const addressInput = document.getElementById("address");
+    const genderSelect = document.getElementById("gender");
+    const patientIdInput = document.getElementById("patientId");
+    const statusBox = document.getElementById("patientStatusBox");
+
+    if (!contactInput) {
+        return;
+    }
+
+    let debounceTimer;
+
+    contactInput.addEventListener("input", function () {
+
+        clearTimeout(debounceTimer);
+
+        const value = contactInput.value.trim();
+
+        if (value.length < 7) {
+            resetPatientState();
+            hideStatusBox();
+            return;
+        }
+
+        debounceTimer = setTimeout(function () {
+            checkPatient(value);
+        }, 500);
+    });
+
+    function checkPatient(contactNumber) {
+
+        fetch(
+            "<%= request.getContextPath() %>/checkPatient?contactNumber="
+            + encodeURIComponent(contactNumber)
+        )
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+
+            if (data.found) {
+
+                nameInput.value = data.patientName;
+                addressInput.value = data.address;
+
+                if (data.gender) {
+                    genderSelect.value = data.gender;
+                }
+
+                patientIdInput.value = data.patientId;
+
+                nameInput.readOnly = true;
+                addressInput.readOnly = true;
+
+                statusBox.className = "patient-status-box found";
+                statusBox.style.display = "flex";
+                statusBox.innerHTML =
+                    "<i class=\"fas fa-circle-check\"></i> Existing patient found &mdash; details loaded automatically.";
+
+            } else {
+
+                resetPatientState();
+
+                statusBox.className = "patient-status-box new";
+                statusBox.style.display = "flex";
+                statusBox.innerHTML =
+                    "<i class=\"fas fa-user-plus\"></i> No matching patient &mdash; a new patient record will be created.";
+            }
+        })
+        .catch(function () {
+            resetPatientState();
+            hideStatusBox();
+        });
+    }
+
+    function resetPatientState() {
+
+        nameInput.readOnly = false;
+        addressInput.readOnly = false;
+        patientIdInput.value = "";
+    }
+
+    function hideStatusBox() {
+        statusBox.style.display = "none";
+        statusBox.innerHTML = "";
+    }
 });
 </script>
 

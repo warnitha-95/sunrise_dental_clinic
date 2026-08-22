@@ -9,6 +9,7 @@ public class patient {
     private String gender;
     private java.sql.Timestamp register_datetime;
     private String status;
+
     public patient() {
     }
 

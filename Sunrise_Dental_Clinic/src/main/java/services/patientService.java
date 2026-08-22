@@ -30,49 +30,22 @@ public class patientService {
 
                 patient pat = new patient();
 
-                pat.setPatient_id(
-                        rs.getInt("patient_id")
-                );
-
-                pat.setPatient_name(
-                        rs.getString("patient_name")
-                );
-
-                pat.setAddress(
-                        rs.getString("address")
-                );
-
-                pat.setContact_number(
-                        rs.getString("contact_number")
-                );
-
-                pat.setGender(
-                        rs.getString("gender")
-                );
-
-                pat.setRegister_datetime(
-                        rs.getTimestamp("registered_datetime")
-                );
-
-                pat.setStatus(
-                        rs.getString("status")
-                );
+                pat.setPatient_id(rs.getInt("patient_id"));
+                pat.setPatient_name(rs.getString("patient_name"));
+                pat.setAddress(rs.getString("address"));
+                pat.setContact_number(rs.getString("contact_number"));
+                pat.setGender(rs.getString("gender"));
+                pat.setRegister_datetime(rs.getTimestamp("registered_datetime"));
+                pat.setStatus(rs.getString("status"));
 
                 patientList.add(pat);
             }
 
-            System.out.println(
-                    "Patients loaded from database: "
-                    + patientList.size()
-            );
+            System.out.println("Patients loaded from database: " + patientList.size());
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR loading patients: "
-                    + e.getMessage()
-            );
-
+            System.out.println("ERROR loading patients: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -109,33 +82,13 @@ public class patientService {
 
                     patient pat = new patient();
 
-                    pat.setPatient_id(
-                            rs.getInt("patient_id")
-                    );
-
-                    pat.setPatient_name(
-                            rs.getString("patient_name")
-                    );
-
-                    pat.setAddress(
-                            rs.getString("address")
-                    );
-
-                    pat.setContact_number(
-                            rs.getString("contact_number")
-                    );
-
-                    pat.setGender(
-                            rs.getString("gender")
-                    );
-
-                    pat.setRegister_datetime(
-                            rs.getTimestamp("registered_datetime")
-                    );
-
-                    pat.setStatus(
-                            rs.getString("status")
-                    );
+                    pat.setPatient_id(rs.getInt("patient_id"));
+                    pat.setPatient_name(rs.getString("patient_name"));
+                    pat.setAddress(rs.getString("address"));
+                    pat.setContact_number(rs.getString("contact_number"));
+                    pat.setGender(rs.getString("gender"));
+                    pat.setRegister_datetime(rs.getTimestamp("registered_datetime"));
+                    pat.setStatus(rs.getString("status"));
 
                     patientList.add(pat);
                 }
@@ -143,11 +96,7 @@ public class patientService {
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR searching patients: "
-                    + e.getMessage()
-            );
-
+            System.out.println("ERROR searching patients: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -177,43 +126,70 @@ public class patientService {
 
                     pat = new patient();
 
-                    pat.setPatient_id(
-                            rs.getInt("patient_id")
-                    );
-
-                    pat.setPatient_name(
-                            rs.getString("patient_name")
-                    );
-
-                    pat.setAddress(
-                            rs.getString("address")
-                    );
-
-                    pat.setContact_number(
-                            rs.getString("contact_number")
-                    );
-
-                    pat.setGender(
-                            rs.getString("gender")
-                    );
-
-                    pat.setRegister_datetime(
-                            rs.getTimestamp("registered_datetime")
-                    );
-
-                    pat.setStatus(
-                            rs.getString("status")
-                    );
+                    pat.setPatient_id(rs.getInt("patient_id"));
+                    pat.setPatient_name(rs.getString("patient_name"));
+                    pat.setAddress(rs.getString("address"));
+                    pat.setContact_number(rs.getString("contact_number"));
+                    pat.setGender(rs.getString("gender"));
+                    pat.setRegister_datetime(rs.getTimestamp("registered_datetime"));
+                    pat.setStatus(rs.getString("status"));
                 }
             }
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR getting patient: "
-                    + e.getMessage()
-            );
+            System.out.println("ERROR getting patient: " + e.getMessage());
+            e.printStackTrace();
+        }
 
+        return pat;
+    }
+
+    /**
+     * Looks up a patient by contact number. Used by the New/Edit Appointment
+     * forms to detect whether the person is already a registered patient.
+     */
+    public patient getPatientByContactNumber(String contactNumber) {
+
+        patient pat = null;
+
+        if (contactNumber == null || contactNumber.trim().isEmpty()) {
+            return null;
+        }
+
+        String sql =
+                "SELECT patient_id, patient_name, address, " +
+                "contact_number, gender, registered_datetime, status " +
+                "FROM patients " +
+                "WHERE contact_number = ? " +
+                "LIMIT 1";
+
+        try (
+                Connection conn = DBConnect.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setString(1, contactNumber.trim());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+
+                    pat = new patient();
+
+                    pat.setPatient_id(rs.getInt("patient_id"));
+                    pat.setPatient_name(rs.getString("patient_name"));
+                    pat.setAddress(rs.getString("address"));
+                    pat.setContact_number(rs.getString("contact_number"));
+                    pat.setGender(rs.getString("gender"));
+                    pat.setRegister_datetime(rs.getTimestamp("registered_datetime"));
+                    pat.setStatus(rs.getString("status"));
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("ERROR looking up patient by contact number: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -232,25 +208,10 @@ public class patientService {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
-            stmt.setString(
-                    1,
-                    pat.getPatient_name()
-            );
-
-            stmt.setString(
-                    2,
-                    pat.getAddress()
-            );
-
-            stmt.setString(
-                    3,
-                    pat.getContact_number()
-            );
-
-            stmt.setString(
-                    4,
-                    pat.getGender()
-            );
+            stmt.setString(1, pat.getPatient_name());
+            stmt.setString(2, pat.getAddress());
+            stmt.setString(3, pat.getContact_number());
+            stmt.setString(4, pat.getGender());
 
             String status = pat.getStatus();
 
@@ -258,10 +219,7 @@ public class patientService {
                 status = "Active";
             }
 
-            stmt.setString(
-                    5,
-                    status
-            );
+            stmt.setString(5, status);
 
             int rows = stmt.executeUpdate();
 
@@ -269,11 +227,7 @@ public class patientService {
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR adding patient: "
-                    + e.getMessage()
-            );
-
+            System.out.println("ERROR adding patient: " + e.getMessage());
             e.printStackTrace();
 
             return false;
@@ -296,25 +250,10 @@ public class patientService {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
-            stmt.setString(
-                    1,
-                    pat.getPatient_name()
-            );
-
-            stmt.setString(
-                    2,
-                    pat.getAddress()
-            );
-
-            stmt.setString(
-                    3,
-                    pat.getContact_number()
-            );
-
-            stmt.setString(
-                    4,
-                    pat.getGender()
-            );
+            stmt.setString(1, pat.getPatient_name());
+            stmt.setString(2, pat.getAddress());
+            stmt.setString(3, pat.getContact_number());
+            stmt.setString(4, pat.getGender());
 
             String status = pat.getStatus();
 
@@ -322,15 +261,8 @@ public class patientService {
                 status = "Active";
             }
 
-            stmt.setString(
-                    5,
-                    status
-            );
-
-            stmt.setInt(
-                    6,
-                    pat.getPatient_id()
-            );
+            stmt.setString(5, status);
+            stmt.setInt(6, pat.getPatient_id());
 
             int rows = stmt.executeUpdate();
 
@@ -338,11 +270,7 @@ public class patientService {
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR updating patient: "
-                    + e.getMessage()
-            );
-
+            System.out.println("ERROR updating patient: " + e.getMessage());
             e.printStackTrace();
 
             return false;
@@ -360,10 +288,7 @@ public class patientService {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
-            stmt.setInt(
-                    1,
-                    patientId
-            );
+            stmt.setInt(1, patientId);
 
             int rows = stmt.executeUpdate();
 
@@ -371,11 +296,7 @@ public class patientService {
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "ERROR deleting patient: "
-                    + e.getMessage()
-            );
-
+            System.out.println("ERROR deleting patient: " + e.getMessage());
             e.printStackTrace();
 
             return false;

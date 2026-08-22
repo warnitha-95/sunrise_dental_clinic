@@ -11,6 +11,8 @@ if (session == null || session.getAttribute("loggedInAdmin") == null) {
     return;
 }
 
+String adminName = (String) session.getAttribute("loggedInAdmin");
+
 appointment appt = (appointment) request.getAttribute("appointment");
 List<dentist> dentists = (List<dentist>) request.getAttribute("dentists");
 List<treatment> treatments = (List<treatment>) request.getAttribute("treatments");
@@ -40,305 +42,417 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
 
     <title>Edit Appointment | Sunrise Dental Clinic</title>
 
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/newappointments.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/adminhomes.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/newappointments.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="appointment-page">
-
-    <div class="page-header">
-
-        <div class="header-content">
-
-            <span class="page-label">APPOINTMENT MANAGEMENT</span>
-
-            <h1>Edit Appointment</h1>
-
-            <p>Update the dentist, schedule, treatments, or status for <%= appt.getAppointmentNumber() %>.</p>
-
+<div class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fas fa-tooth"></i>
         </div>
-
-        <a href="<%= request.getContextPath() %>/manageAppointments" class="back-button">
-            <span>←</span>
-            Appointments
-        </a>
-
+        <div>
+            <h2>Sunrise Dental</h2>
+            <span>Clinic Management</span>
+        </div>
     </div>
 
-    <% if (errorMessage != null && !errorMessage.trim().isEmpty()) { %>
+    <ul class="sidebar-menu">
+        <li>
+            <a href="<%= request.getContextPath() %>/adminhome.jsp">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="<%= request.getContextPath() %>/managepatients.jsp">
+                <i class="fas fa-user-injured"></i>
+                <span>Manage Patients</span>
+            </a>
+        </li>
+        <li>
+            <a href="<%= request.getContextPath() %>/newappointments.jsp">
+                <i class="fas fa-calendar-plus"></i>
+                <span>New Appointment</span>
+            </a>
+        </li>
+        <li>
+            <a href="<%= request.getContextPath() %>/manageappointments.jsp" class="active">
+                <i class="fas fa-calendar-check"></i>
+                <span>All Appointments</span>
+            </a>
+        </li>
+        <li>
+            <a href="<%= request.getContextPath() %>/billing.jsp">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Billing</span>
+            </a>
+        </li>
+        <li>
+            <a href="<%= request.getContextPath() %>/help.jsp">
+                <i class="fas fa-circle-question"></i>
+                <span>Help</span>
+            </a>
+        </li>
+        <li class="logout-item">
+            <a href="<%= request.getContextPath() %>/adminlogout.jsp">
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>
 
-        <div class="error-message">
-            <span class="error-icon">!</span>
+<div class="main-content">
+
+    <header>
+        <div class="header-left">
+            <button class="mobile-menu" id="toggleMenu">
+                <i class="fas fa-bars"></i>
+            </button>
             <div>
-                <strong>Appointment Error</strong>
-                <p><%= errorMessage %></p>
+                <h2>
+                    <i class="fas fa-pen"></i>
+                    Edit Appointment
+                </h2>
             </div>
         </div>
 
-    <% } %>
+        <div class="admin-profile">
+            <div class="admin-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div>
+                <strong><%= adminName %></strong>
+                <span>Administrator</span>
+            </div>
+        </div>
+    </header>
 
-    <form action="<%= request.getContextPath() %>/editAppointment" method="post" id="appointmentForm">
+    <div class="appointment-page">
 
-        <input type="hidden" name="appointmentId" value="<%= appt.getAppointmentId() %>">
+        <div class="page-header">
 
-        <div class="form-card">
+            <div class="header-content">
 
-            <div class="card-header">
-                <div class="card-icon">01</div>
-                <div>
-                    <h2>Patient Information</h2>
-                    <p>Patient details cannot be changed here.</p>
-                </div>
+                <span class="page-label">APPOINTMENT MANAGEMENT</span>
+
+                <h1>Edit Appointment</h1>
+
+                <p>Update the dentist, schedule, treatments, or status for <%= appt.getAppointmentNumber() %>.</p>
+
             </div>
 
-            <div class="form-grid">
-
-                <div class="form-group full-width">
-                    <label>Patient Name</label>
-                    <input type="text" value="<%= appt.getPatientName() %>" disabled>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Address</label>
-                    <textarea rows="3" disabled><%= appt.getAddress() %></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Contact Number</label>
-                    <input type="text" value="<%= appt.getContactNumber() %>" disabled>
-                </div>
-
-            </div>
+            <a href="<%= request.getContextPath() %>/manageAppointments" class="back-button">
+                <span>←</span>
+                Appointments
+            </a>
 
         </div>
 
-        <div class="form-card">
+        <% if (errorMessage != null && !errorMessage.trim().isEmpty()) { %>
 
-            <div class="card-header">
-                <div class="card-icon">02</div>
+            <div class="error-message">
+                <span class="error-icon">!</span>
                 <div>
-                    <h2>Appointment Details</h2>
-                    <p>Select the dentist, schedule, and status.</p>
+                    <strong>Appointment Error</strong>
+                    <p><%= errorMessage %></p>
                 </div>
             </div>
 
-            <div class="form-grid">
+        <% } %>
 
-                <div class="form-group">
+        <form action="<%= request.getContextPath() %>/editAppointment" method="post" id="appointmentForm">
 
-                    <label for="dentistId">
-                        Dentist
-                        <span>*</span>
-                    </label>
+            <input type="hidden" name="appointmentId" value="<%= appt.getAppointmentId() %>">
+            <input type="hidden" name="patientId" value="<%= appt.getPatientId() %>">
 
-                    <select id="dentistId" name="dentistId" required>
+            <div class="form-card">
 
-                        <option value="">Select dentist</option>
+                <div class="card-header">
+                    <div class="card-icon">01</div>
+                    <div>
+                        <h2>Patient Information</h2>
+                        <p>Update the patient's contact details.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group full-width">
+                        <label for="patientName">
+                            Patient Name
+                            <span>*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="patientName"
+                            name="patientName"
+                            value="<%= appt.getPatientName() %>"
+                            placeholder="Enter patient name"
+                            maxlength="150"
+                            autocomplete="name"
+                            required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">
+                            Address
+                            <span>*</span>
+                        </label>
+                        <textarea
+                            id="address"
+                            name="address"
+                            rows="3"
+                            maxlength="255"
+                            placeholder="Enter patient address"
+                            required><%= appt.getAddress() %></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="contactNumber">
+                            Contact Number
+                            <span>*</span>
+                        </label>
+                        <input
+                            type="tel"
+                            id="contactNumber"
+                            name="contactNumber"
+                            value="<%= appt.getContactNumber() %>"
+                            placeholder="0771234567"
+                            maxlength="20"
+                            autocomplete="tel"
+                            required>
+                        <small>Example: 0771234567</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">
+                            Gender
+                            <span>*</span>
+                        </label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male" <%= "Male".equalsIgnoreCase(appt.getGender()) ? "selected" : "" %>>Male</option>
+                            <option value="Female" <%= "Female".equalsIgnoreCase(appt.getGender()) ? "selected" : "" %>>Female</option>
+                            <option value="Other" <%= "Other".equalsIgnoreCase(appt.getGender()) ? "selected" : "" %>>Other</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-card">
+
+                <div class="card-header">
+                    <div class="card-icon">02</div>
+                    <div>
+                        <h2>Appointment Details</h2>
+                        <p>Select the dentist, schedule, and status.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="dentistId">
+                            Dentist
+                            <span>*</span>
+                        </label>
+
+                        <select id="dentistId" name="dentistId" required>
+
+                            <option value="">Select dentist</option>
+
+                            <%
+                                if (dentists != null && !dentists.isEmpty()) {
+                                    for (dentist d : dentists) {
+                                        boolean isSelected = d.getDentistId() == appt.getDentistId();
+                            %>
+                                <option value="<%= d.getDentistId() %>" <%= isSelected ? "selected" : "" %>>
+                                    Dr. <%= d.getDentistName() %>
+                                    <%
+                                        if (d.getSpecialization() != null && !d.getSpecialization().trim().isEmpty()) {
+                                    %>
+                                        - <%= d.getSpecialization() %>
+                                    <%
+                                        }
+                                    %>
+                                </option>
+                            <%
+                                    }
+                                } else {
+                            %>
+                                <option value="" disabled>No active dentists available</option>
+                            <%
+                                }
+                            %>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">
+                            Appointment Date
+                            <span>*</span>
+                        </label>
+                        <input type="date" id="appointmentDate" name="appointmentDate" value="<%= currentDate %>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentTime">
+                            Appointment Time
+                            <span>*</span>
+                        </label>
+                        <input type="time" id="appointmentTime" name="appointmentTime" value="<%= currentTime %>" required>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Status
+                            <span>*</span>
+                        </label>
+
+                        <select id="status" name="status" required>
+                            <option value="Scheduled" <%= "Scheduled".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Scheduled</option>
+                            <option value="Completed" <%= "Completed".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Completed</option>
+                            <option value="Cancelled" <%= "Cancelled".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Cancelled</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-card">
+
+                <div class="card-header">
+                    <div class="card-icon">03</div>
+                    <div>
+                        <h2>Treatment Selection</h2>
+                        <p>Select between 1 and 3 treatments.</p>
+                    </div>
+                </div>
+
+                <div class="treatment-section">
+
+                    <div class="treatment-title">
+                        <div>
+                            <label>
+                                Treatment Type
+                                <span>*</span>
+                            </label>
+                            <p>You can select up to 3 treatments for this appointment.</p>
+                        </div>
+                        <div class="treatment-count">
+                            <strong id="treatmentCount">0</strong>
+                            <span>/ 3</span>
+                        </div>
+                    </div>
+
+                    <div class="treatment-list">
 
                         <%
-                            if (dentists != null && !dentists.isEmpty()) {
-                                for (dentist d : dentists) {
-                                    boolean isSelected = d.getDentistId() == appt.getDentistId();
+                            if (treatments != null && !treatments.isEmpty()) {
+                                for (treatment t : treatments) {
+                                    boolean isChecked = selectedTreatmentIds != null && selectedTreatmentIds.contains(t.getTreatmentId());
                         %>
-                            <option value="<%= d.getDentistId() %>" <%= isSelected ? "selected" : "" %>>
-                                Dr. <%= d.getDentistName() %>
-                                <%
-                                    if (d.getSpecialization() != null && !d.getSpecialization().trim().isEmpty()) {
-                                %>
-                                    - <%= d.getSpecialization() %>
-                                <%
-                                    }
-                                %>
-                            </option>
+
+                            <label class="treatment-option">
+
+                                <input
+                                    type="checkbox"
+                                    name="treatmentIds"
+                                    value="<%= t.getTreatmentId() %>"
+                                    data-treatment-name="<%= t.getTreatmentName() %>"
+                                    data-treatment-price="<%= t.getPriceLkr() %>"
+                                    <%= isChecked ? "checked" : "" %>>
+
+                                <span class="treatment-check"></span>
+
+                                <span class="treatment-info">
+                                    <strong><%= t.getTreatmentName() %></strong>
+                                    <small>LKR <%= String.format("%,.2f", t.getPriceLkr()) %></small>
+                                </span>
+
+                            </label>
+
                         <%
                                 }
                             } else {
                         %>
-                            <option value="" disabled>No active dentists available</option>
+
+                            <div class="empty-treatment">
+                                <span class="empty-icon">!</span>
+                                <div>
+                                    <strong>No active treatments available</strong>
+                                    <p>Please add an active treatment before editing this appointment.</p>
+                                </div>
+                            </div>
+
                         <%
                             }
                         %>
 
-                    </select>
-
-                </div>
-
-                <div class="form-group">
-                    <label for="appointmentDate">
-                        Appointment Date
-                        <span>*</span>
-                    </label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" value="<%= currentDate %>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="appointmentTime">
-                        Appointment Time
-                        <span>*</span>
-                    </label>
-                    <input type="time" id="appointmentTime" name="appointmentTime" value="<%= currentTime %>" required>
-                </div>
-
-                <div class="form-group">
-
-                    <label for="status">
-                        Status
-                        <span>*</span>
-                    </label>
-
-                    <select id="status" name="status" required>
-                        <option value="Scheduled" <%= "Scheduled".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Scheduled</option>
-                        <option value="Completed" <%= "Completed".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Completed</option>
-                        <option value="Cancelled" <%= "Cancelled".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Cancelled</option>
-                    </select>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="form-card">
-
-            <div class="card-header">
-                <div class="card-icon">03</div>
-                <div>
-                    <h2>Treatment Selection</h2>
-                    <p>Select between 1 and 3 treatments.</p>
-                </div>
-            </div>
-
-            <div class="treatment-section">
-
-                <div class="treatment-title">
-                    <div>
-                        <label>
-                            Treatment Type
-                            <span>*</span>
-                        </label>
-                        <p>You can select up to 3 treatments for this appointment.</p>
                     </div>
-                    <div class="treatment-count">
-                        <strong id="treatmentCount">0</strong>
-                        <span>/ 3</span>
-                    </div>
-                </div>
 
-                <div class="treatment-list">
-
-                    <%
-                        if (treatments != null && !treatments.isEmpty()) {
-                            for (treatment t : treatments) {
-                                boolean isChecked = selectedTreatmentIds != null && selectedTreatmentIds.contains(t.getTreatmentId());
-                    %>
-
-                        <label class="treatment-option">
-
-                            <input
-                                type="checkbox"
-                                name="treatmentIds"
-                                value="<%= t.getTreatmentId() %>"
-                                data-treatment-name="<%= t.getTreatmentName() %>"
-                                data-treatment-price="<%= t.getPriceLkr() %>"
-                                <%= isChecked ? "checked" : "" %>>
-
-                            <span class="treatment-check"></span>
-
-                            <span class="treatment-info">
-                                <strong><%= t.getTreatmentName() %></strong>
-                                <small>LKR <%= String.format("%,.2f", t.getPriceLkr()) %></small>
-                            </span>
-
-                        </label>
-
-                    <%
-                            }
-                        } else {
-                    %>
-
-                        <div class="empty-treatment">
-                            <span class="empty-icon">!</span>
-                            <div>
-                                <strong>No active treatments available</strong>
-                                <p>Please add an active treatment before editing this appointment.</p>
-                            </div>
+                    <div class="selected-box">
+                        <div class="selected-header">
+                            <span>Selected Treatments</span>
+                            <span id="selectedTotal">LKR 0.00</span>
                         </div>
-
-                    <%
-                        }
-                    %>
-
-                </div>
-
-                <div class="selected-box">
-                    <div class="selected-header">
-                        <span>Selected Treatments</span>
-                        <span id="selectedTotal">LKR 0.00</span>
+                        <div class="selected-treatments" id="selectedTreatments">
+                            <span class="selected-placeholder">No treatments selected.</span>
+                        </div>
                     </div>
-                    <div class="selected-treatments" id="selectedTreatments">
-                        <span class="selected-placeholder">No treatments selected.</span>
-                    </div>
+
                 </div>
 
             </div>
 
-        </div>
+            <div class="form-actions">
 
-        <div class="form-actions">
+                <a href="<%= request.getContextPath() %>/manageAppointments" class="cancel-button">Cancel</a>
 
-            <a href="<%= request.getContextPath() %>/manageAppointments" class="cancel-button">Cancel</a>
+                <button type="submit" class="submit-button" id="submitButton">
+                    <span>✓</span>
+                    Save Changes
+                </button>
 
-            <button type="submit" class="submit-button" id="submitButton">
-                <span>✓</span>
-                Save Changes
-            </button>
+            </div>
 
-        </div>
+        </form>
 
-    </form>
+    </div>
+
+    <footer>
+        <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
+        <span>Clinic Management System</span>
+    </footer>
 
 </div>
 
-<script src="<%= request.getContextPath() %>/js/newappointments.js"></script>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+const toggleMenu = document.getElementById("toggleMenu");
+const sidebar = document.getElementById("sidebar");
 
-        const checkboxes = document.querySelectorAll('input[name="treatmentIds"]');
-        const countLabel = document.getElementById("treatmentCount");
-        const totalLabel = document.getElementById("selectedTotal");
-        const selectedBox = document.getElementById("selectedTreatments");
-
-        function refresh() {
-
-            const checked = Array.from(checkboxes).filter(cb => cb.checked);
-
-            countLabel.textContent = checked.length;
-
-            let total = 0;
-
-            if (checked.length === 0) {
-
-                selectedBox.innerHTML = '<span class="selected-placeholder">No treatments selected.</span>';
-
-            } else {
-
-                selectedBox.innerHTML = checked.map(cb => {
-                    total += parseFloat(cb.dataset.treatmentPrice || "0");
-                    return '<span class="selected-chip">' + cb.dataset.treatmentName + '</span>';
-                }).join("");
-            }
-
-            totalLabel.textContent = "LKR " + total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        checkboxes.forEach(cb => cb.addEventListener("change", refresh));
-
-        refresh();
+if (toggleMenu) {
+    toggleMenu.addEventListener("click", function() {
+        sidebar.classList.toggle("collapsed");
     });
+}
 </script>
+
+<script src="<%= request.getContextPath() %>/JS/newappointments.js"></script>
 
 </body>
 

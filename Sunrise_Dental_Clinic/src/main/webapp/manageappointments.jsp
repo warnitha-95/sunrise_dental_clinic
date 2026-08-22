@@ -212,7 +212,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                             <td class="mono"><%= appt.getAppointmentNumber() %></td>
                             <td><%= appt.getPatientName() %></td>
                             <td><%= appt.getContactNumber() %></td>
-                            <td>Dr. <%= appt.getDentistName() %></td>
+                            <td> <%= appt.getDentistName() %></td>
                             <td><%= appt.getAppointmentDatetime() != null ? dateFormat.format(appt.getAppointmentDatetime()) : "-" %></td>
                             <td><%= treatmentsText %></td>
                             <td>LKR <%= String.format("%,.2f", appt.getTotalPrice()) %></td>

@@ -94,11 +94,16 @@ public class editAppointment extends HttpServlet {
         }
 
         String idValue = request.getParameter("appointmentId");
+        String patientIdValue = request.getParameter("patientId");
+
+        String patientName = request.getParameter("patientName");
+        String address = request.getParameter("address");
+        String contactNumber = request.getParameter("contactNumber");
+        String gender = request.getParameter("gender");
 
         String dentistIdValue = request.getParameter("dentistId");
 
         String appointmentDate = request.getParameter("appointmentDate");
-
         String appointmentTime = request.getParameter("appointmentTime");
 
         String status = request.getParameter("status");
@@ -122,6 +127,38 @@ public class editAppointment extends HttpServlet {
         }
 
         try {
+
+            if (patientName == null ||
+                patientName.trim().isEmpty()) {
+
+                throw new IllegalArgumentException(
+                        "Patient name is required."
+                );
+            }
+
+            if (address == null ||
+                address.trim().isEmpty()) {
+
+                throw new IllegalArgumentException(
+                        "Address is required."
+                );
+            }
+
+            if (contactNumber == null ||
+                contactNumber.trim().isEmpty()) {
+
+                throw new IllegalArgumentException(
+                        "Contact number is required."
+                );
+            }
+
+            if (gender == null ||
+                gender.trim().isEmpty()) {
+
+                throw new IllegalArgumentException(
+                        "Please select gender."
+                );
+            }
 
             if (dentistIdValue == null ||
                 dentistIdValue.trim().isEmpty()) {
@@ -160,6 +197,8 @@ public class editAppointment extends HttpServlet {
 
             int dentistId = Integer.parseInt(dentistIdValue);
 
+            int patientId = Integer.parseInt(patientIdValue);
+
             List<Integer> treatmentIds = new ArrayList<>();
 
             for (String value : treatmentValues) {
@@ -195,6 +234,11 @@ public class editAppointment extends HttpServlet {
             appointment appt = new appointment();
 
             appt.setAppointmentId(appointmentId);
+            appt.setPatientId(patientId);
+            appt.setPatientName(patientName.trim());
+            appt.setAddress(address.trim());
+            appt.setContactNumber(contactNumber.trim());
+            appt.setGender(gender.trim());
             appt.setDentistId(dentistId);
             appt.setAppointmentDatetime(Timestamp.valueOf(dateTime));
             appt.setStatus(status);
@@ -276,7 +320,6 @@ public class editAppointment extends HttpServlet {
             }
 
             List<?> dentists = appointmentService.getActiveDentists();
-
             List<?> treatments = appointmentService.getActiveTreatments();
 
             request.setAttribute("appointment", appt);

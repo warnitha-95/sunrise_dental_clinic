@@ -12,6 +12,7 @@ public class appointment {
     private String patientName;
     private String address;
     private String contactNumber;
+    private String gender;
     private int dentistId;
     private String dentistName;
     private Timestamp appointmentDatetime;
@@ -69,6 +70,14 @@ public class appointment {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public int getDentistId() {

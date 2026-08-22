@@ -35,8 +35,7 @@ public class newAppointment extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session =
-                request.getSession(false);
+        HttpSession session = request.getSession(false);
 
         if (session == null ||
             session.getAttribute("loggedInAdmin") == null) {
@@ -60,8 +59,7 @@ public class newAppointment extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        HttpSession session =
-                request.getSession(false);
+        HttpSession session = request.getSession(false);
 
         if (session == null ||
             session.getAttribute("loggedInAdmin") == null) {
@@ -74,26 +72,17 @@ public class newAppointment extends HttpServlet {
             return;
         }
 
-        String patientName =
-                request.getParameter("patientName");
+        String patientName = request.getParameter("patientName");
+        String address = request.getParameter("address");
+        String contactNumber = request.getParameter("contactNumber");
+        String gender = request.getParameter("gender");
 
-        String address =
-                request.getParameter("address");
+        String dentistIdValue = request.getParameter("dentistId");
 
-        String contactNumber =
-                request.getParameter("contactNumber");
+        String appointmentDate = request.getParameter("appointmentDate");
+        String appointmentTime = request.getParameter("appointmentTime");
 
-        String dentistIdValue =
-                request.getParameter("dentistId");
-
-        String appointmentDate =
-                request.getParameter("appointmentDate");
-
-        String appointmentTime =
-                request.getParameter("appointmentTime");
-
-        String[] treatmentValues =
-                request.getParameterValues("treatmentIds");
+        String[] treatmentValues = request.getParameterValues("treatmentIds");
 
         try {
 
@@ -118,6 +107,14 @@ public class newAppointment extends HttpServlet {
 
                 throw new IllegalArgumentException(
                         "Contact number is required."
+                );
+            }
+
+            if (gender == null ||
+                gender.trim().isEmpty()) {
+
+                throw new IllegalArgumentException(
+                        "Please select gender."
                 );
             }
 
@@ -148,31 +145,20 @@ public class newAppointment extends HttpServlet {
                 );
             }
 
-            int dentistId =
-                    Integer.parseInt(
-                            dentistIdValue
-                    );
+            int dentistId = Integer.parseInt(dentistIdValue);
 
-            List<Integer> treatmentIds =
-                    new ArrayList<>();
+            List<Integer> treatmentIds = new ArrayList<>();
 
             for (String value : treatmentValues) {
 
-                if (value == null ||
-                    value.trim().isEmpty()) {
-
+                if (value == null || value.trim().isEmpty()) {
                     continue;
                 }
 
-                int treatmentId =
-                        Integer.parseInt(value);
+                int treatmentId = Integer.parseInt(value);
 
-                if (!treatmentIds.contains(
-                        treatmentId)) {
-
-                    treatmentIds.add(
-                            treatmentId
-                    );
+                if (!treatmentIds.contains(treatmentId)) {
+                    treatmentIds.add(treatmentId);
                 }
             }
 
@@ -185,62 +171,38 @@ public class newAppointment extends HttpServlet {
             }
 
             DateTimeFormatter formatter =
-                    DateTimeFormatter.ofPattern(
-                            "yyyy-MM-dd'T'HH:mm"
-                    );
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
             LocalDateTime dateTime =
                     LocalDateTime.parse(
-                            appointmentDate
-                            + "T"
-                            + appointmentTime,
+                            appointmentDate + "T" + appointmentTime,
                             formatter
                     );
 
-            if (dateTime.isBefore(
-                    LocalDateTime.now())) {
+            if (dateTime.isBefore(LocalDateTime.now())) {
 
                 throw new IllegalArgumentException(
                         "Appointment date and time cannot be in the past."
                 );
             }
 
-            appointment appt =
-                    new appointment();
+            appointment appt = new appointment();
 
-            appt.setPatientName(
-                    patientName.trim()
-            );
+            appt.setPatientName(patientName.trim());
+            appt.setAddress(address.trim());
+            appt.setContactNumber(contactNumber.trim());
+            appt.setGender(gender.trim());
+            appt.setDentistId(dentistId);
+            appt.setAppointmentDatetime(Timestamp.valueOf(dateTime));
+            appt.setTreatmentIds(treatmentIds);
 
-            appt.setAddress(
-                    address.trim()
-            );
-
-            appt.setContactNumber(
-                    contactNumber.trim()
-            );
-
-            appt.setDentistId(
-                    dentistId
-            );
-
-            appt.setAppointmentDatetime(
-                    Timestamp.valueOf(dateTime)
-            );
-
-            appt.setTreatmentIds(
-                    treatmentIds
-            );
-
-            boolean created =
-                    appointmentService
-                    .createAppointment(appt);
+            boolean created = appointmentService.createAppointment(appt);
 
             if (created) {
 
                 response.sendRedirect(
                         request.getContextPath()
-                        + "/appointments.jsp"
+                        + "/manageappointments.jsp"
                 );
 
                 return;
@@ -289,33 +251,14 @@ public class newAppointment extends HttpServlet {
 
         try {
 
-            List<?> dentists =
-                    appointmentService
-                    .getActiveDentists();
+            List<?> dentists = appointmentService.getActiveDentists();
+            List<?> treatments = appointmentService.getActiveTreatments();
 
-            List<?> treatments =
-                    appointmentService
-                    .getActiveTreatments();
+            System.out.println("Dentists returned: " + dentists.size());
+            System.out.println("Treatments returned: " + treatments.size());
 
-            System.out.println(
-                    "Dentists returned: "
-                    + dentists.size()
-            );
-
-            System.out.println(
-                    "Treatments returned: "
-                    + treatments.size()
-            );
-
-            request.setAttribute(
-                    "dentists",
-                    dentists
-            );
-
-            request.setAttribute(
-                    "treatments",
-                    treatments
-            );
+            request.setAttribute("dentists", dentists);
+            request.setAttribute("treatments", treatments);
 
             request.getRequestDispatcher(
                     "/newappointments.jsp"

@@ -92,7 +92,6 @@ public class appointmentService {
         return treatmentList;
     }
 
-
     public ArrayList<appointment> getAllAppointments() {
 
         ArrayList<appointment> appointmentList = new ArrayList<>();
@@ -155,17 +154,19 @@ public class appointmentService {
 
     /**
      * Loads a single appointment (with its selected treatment ids) for
-     * the Edit Appointment form.
+     * the Edit Appointment form. Includes the linked patient's gender.
      */
     public appointment getAppointmentById(int appointmentId) {
 
         appointment appt = null;
 
         String sql =
-                "SELECT appointment_id, appointment_number, patient_id, patient_name, " +
-                "address, contact_number, dentist_id, appointment_datetime, status " +
-                "FROM appointments " +
-                "WHERE appointment_id = ?";
+                "SELECT a.appointment_id, a.appointment_number, a.patient_id, a.patient_name, " +
+                "a.address, a.contact_number, a.dentist_id, a.appointment_datetime, a.status, " +
+                "p.gender " +
+                "FROM appointments a " +
+                "LEFT JOIN patients p ON a.patient_id = p.patient_id " +
+                "WHERE a.appointment_id = ?";
 
         String treatmentSql =
                 "SELECT treatment_id " +
@@ -195,6 +196,7 @@ public class appointmentService {
                         appt.setDentistId(rs.getInt("dentist_id"));
                         appt.setAppointmentDatetime(rs.getTimestamp("appointment_datetime"));
                         appt.setStatus(rs.getString("status"));
+                        appt.setGender(rs.getString("gender"));
                     }
                 }
             }
@@ -327,16 +329,24 @@ public class appointmentService {
     }
 
     /**
-     * Updates an existing appointment's dentist, schedule, status, and
-     * treatment selection. Replaces the appointment_treatments rows
+     * Updates an existing appointment's patient details, dentist, schedule,
+     * status, and treatment selection. Also keeps the linked patients row
+     * (including gender) in sync so changes here are reflected in
+     * Manage Patients too. Replaces the appointment_treatments rows
      * entirely to match the new selection.
      */
     public boolean updateAppointment(appointment appt) {
 
         String updateSql =
                 "UPDATE appointments " +
-                "SET dentist_id = ?, appointment_datetime = ?, status = ? " +
+                "SET patient_name = ?, address = ?, contact_number = ?, " +
+                "dentist_id = ?, appointment_datetime = ?, status = ? " +
                 "WHERE appointment_id = ?";
+
+        String updatePatientSql =
+                "UPDATE patients " +
+                "SET patient_name = ?, address = ?, contact_number = ?, gender = ? " +
+                "WHERE patient_id = ?";
 
         String deleteTreatmentsSql =
                 "DELETE FROM appointment_treatments " +
@@ -357,16 +367,38 @@ public class appointmentService {
 
             try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
 
-                stmt.setInt(1, appt.getDentistId());
-                stmt.setTimestamp(2, appt.getAppointmentDatetime());
-                stmt.setString(3, appt.getStatus());
-                stmt.setInt(4, appt.getAppointmentId());
+                stmt.setString(1, appt.getPatientName());
+                stmt.setString(2, appt.getAddress());
+                stmt.setString(3, appt.getContactNumber());
+                stmt.setInt(4, appt.getDentistId());
+                stmt.setTimestamp(5, appt.getAppointmentDatetime());
+                stmt.setString(6, appt.getStatus());
+                stmt.setInt(7, appt.getAppointmentId());
 
                 int rows = stmt.executeUpdate();
 
                 if (rows == 0) {
                     conn.rollback();
                     return false;
+                }
+            }
+
+            if (appt.getPatientId() != null && appt.getPatientId() > 0) {
+
+                try (PreparedStatement stmt = conn.prepareStatement(updatePatientSql)) {
+
+                    stmt.setString(1, appt.getPatientName());
+                    stmt.setString(2, appt.getAddress());
+                    stmt.setString(3, appt.getContactNumber());
+                    stmt.setString(
+                            4,
+                            (appt.getGender() != null && !appt.getGender().trim().isEmpty())
+                                    ? appt.getGender().trim()
+                                    : "Not specified"
+                    );
+                    stmt.setInt(5, appt.getPatientId());
+
+                    stmt.executeUpdate();
                 }
             }
 
@@ -505,8 +537,9 @@ public class appointmentService {
 
     /**
      * Finds an existing patient by contact number, or creates a new one
-     * if none exists. Must be called using the same connection/transaction
-     * as the appointment insert so both succeed or roll back together.
+     * if none exists — using the gender submitted on the appointment form.
+     * Must be called using the same connection/transaction as the
+     * appointment insert so both succeed or roll back together.
      */
     private int findOrCreatePatientId(
             Connection conn,
@@ -544,7 +577,12 @@ public class appointmentService {
             insertStmt.setString(1, appt.getPatientName());
             insertStmt.setString(2, appt.getAddress());
             insertStmt.setString(3, appt.getContactNumber());
-            insertStmt.setString(4, "Not specified");
+            insertStmt.setString(
+                    4,
+                    (appt.getGender() != null && !appt.getGender().trim().isEmpty())
+                            ? appt.getGender().trim()
+                            : "Not specified"
+            );
             insertStmt.setString(5, "Active");
 
             insertStmt.executeUpdate();
