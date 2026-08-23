@@ -308,13 +308,9 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
                             <option value="Completed" <%= "Completed".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Completed</option>
                             <option value="Cancelled" <%= "Cancelled".equalsIgnoreCase(appt.getStatus()) ? "selected" : "" %>>Cancelled</option>
                         </select>
-
                     </div>
-
                 </div>
-
             </div>
-
             <div class="form-card">
 
                 <div class="card-header">

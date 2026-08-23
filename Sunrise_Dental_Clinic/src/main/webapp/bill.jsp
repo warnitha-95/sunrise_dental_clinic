@@ -180,27 +180,22 @@ String printedAtText = printedFormat.format(new java.util.Date());
                     <span class="info-label">Patient Name</span>
                     <span class="info-value"><%= appt.getPatientName() %></span>
                 </div>
-
                 <div class="bill-info-block">
                     <span class="info-label">Contact Number</span>
                     <span class="info-value"><%= appt.getContactNumber() %></span>
                 </div>
-
                 <div class="bill-info-block full">
                     <span class="info-label">Address</span>
                     <span class="info-value"><%= appt.getAddress() %></span>
                 </div>
-
                 <div class="bill-info-block">
                     <span class="info-label">Dentist</span>
                     <span class="info-value"><%= appt.getDentistName() %></span>
                 </div>
-
                 <div class="bill-info-block">
                     <span class="info-label">Appointment Date &amp; Time</span>
                     <span class="info-value"><%= appointmentDateText %></span>
                 </div>
-
                 <div class="bill-info-block">
                     <span class="info-label">Status</span>
                     <span class="info-value"><%= appt.getStatus() %></span>
