@@ -169,9 +169,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                 <h3>No appointments yet</h3>
                 <p>Create a new appointment to get started.</p>
             </div>
-
         <% } else { %>
-
             <div class="table-wrapper">
                 <table class="appointments-table" id="appointmentsTable">
                     <thead>
@@ -230,11 +228,8 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                     </tbody>
                 </table>
             </div>
-
         <% } %>
-
     </section>
-
     <footer>
         <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
         <span>Clinic Management System</span>
@@ -251,7 +246,6 @@ if (toggleMenu) {
     });
 }
 </script>
-
 <script src="<%= request.getContextPath() %>/JS/manageappointments.js"></script>
 
 </body>

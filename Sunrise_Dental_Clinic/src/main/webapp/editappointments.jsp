@@ -131,28 +131,19 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
     </header>
 
     <div class="appointment-page">
-
         <div class="page-header">
-
             <div class="header-content">
-
                 <span class="page-label">APPOINTMENT MANAGEMENT</span>
-
                 <h1>Edit Appointment</h1>
-
                 <p>Update the dentist, schedule, treatments, or status for <%= appt.getAppointmentNumber() %>.</p>
-
             </div>
 
             <a href="<%= request.getContextPath() %>/manageAppointments" class="back-button">
                 <span>←</span>
                 Appointments
             </a>
-
         </div>
-
         <% if (errorMessage != null && !errorMessage.trim().isEmpty()) { %>
-
             <div class="error-message">
                 <span class="error-icon">!</span>
                 <div>
@@ -160,9 +151,7 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
                     <p><%= errorMessage %></p>
                 </div>
             </div>
-
         <% } %>
-
         <form action="<%= request.getContextPath() %>/editAppointment" method="post" id="appointmentForm">
 
             <input type="hidden" name="appointmentId" value="<%= appt.getAppointmentId() %>">
@@ -177,7 +166,6 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
                         <p>Update the patient's contact details.</p>
                     </div>
                 </div>
-
                 <div class="form-grid">
 
                     <div class="form-group full-width">
@@ -239,11 +227,8 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
                             <option value="Other" <%= "Other".equalsIgnoreCase(appt.getGender()) ? "selected" : "" %>>Other</option>
                         </select>
                     </div>
-
                 </div>
-
             </div>
-
             <div class="form-card">
 
                 <div class="card-header">
@@ -424,13 +409,9 @@ List<Integer> selectedTreatmentIds = appt.getTreatmentIds();
                     <span>✓</span>
                     Save Changes
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
     <footer>
         <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
         <span>Clinic Management System</span>

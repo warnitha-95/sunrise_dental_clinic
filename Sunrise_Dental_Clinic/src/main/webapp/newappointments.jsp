@@ -72,7 +72,6 @@
             <span>Clinic Management</span>
         </div>
     </div>
-
     <ul class="sidebar-menu">
         <li>
             <a href="<%= request.getContextPath() %>/adminhome.jsp">
@@ -173,9 +172,7 @@
                 <span class="error-icon">
                     !
                 </span>
-
                 <div>
-
                     <strong>
                         Appointment Error
                     </strong>
@@ -185,9 +182,7 @@
                     </p>
 
                 </div>
-
             </div>
-
         <% } %>
 
         <form
