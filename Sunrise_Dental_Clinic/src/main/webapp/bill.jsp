@@ -90,7 +90,7 @@ String printedAtText = printedFormat.format(new java.util.Date());
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/bill.jsp" class="active">
+            <a href="<%= request.getContextPath() %>/bill.jsp"  class="active">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>
@@ -114,9 +114,7 @@ String printedAtText = printedFormat.format(new java.util.Date());
 
     <header class="no-print">
         <div class="header-left">
-            <button class="mobile-menu" id="toggleMenu">
-                <i class="fas fa-bars"></i>
-            </button>
+            
             <div>
                 <h2>
                     <i class="fas fa-file-invoice-dollar"></i>
