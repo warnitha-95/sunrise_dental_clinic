@@ -11,8 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class appointmentService {
+
+    
+    public static final BigDecimal CONSULTATION_FEE = new BigDecimal("500.00");
 
     public ArrayList<dentist> getActiveDentists() {
 
@@ -152,10 +156,7 @@ public class appointmentService {
         return appointmentList;
     }
 
-    /**
-     * Loads a single appointment (with its selected treatment ids) for
-     * the Edit Appointment form. Includes the linked patient's gender.
-     */
+    
     public appointment getAppointmentById(int appointmentId) {
 
         appointment appt = null;
@@ -231,10 +232,7 @@ public class appointmentService {
         return appt;
     }
 
-    /**
-     * Loads appointment + dentist header details for the bill view
-     * (no treatment list — use getTreatmentsForAppointment for that).
-     */
+    
     public appointment getAppointmentSummary(int appointmentId) {
 
         appointment appt = null;
@@ -282,10 +280,7 @@ public class appointmentService {
         return appt;
     }
 
-    /**
-     * Loads the itemized list of treatments (with price) billed under
-     * a given appointment, for the printable bill.
-     */
+    
     public ArrayList<treatment> getTreatmentsForAppointment(int appointmentId) {
 
         ArrayList<treatment> treatmentList = new ArrayList<>();
@@ -328,13 +323,32 @@ public class appointmentService {
         return treatmentList;
     }
 
-    /**
-     * Updates an existing appointment's patient details, dentist, schedule,
-     * status, and treatment selection. Also keeps the linked patients row
-     * (including gender) in sync so changes here are reflected in
-     * Manage Patients too. Replaces the appointment_treatments rows
-     * entirely to match the new selection.
-     */
+    
+    public BigDecimal calculateTreatmentTotal(List<treatment> treatmentList) {
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        if (treatmentList == null) {
+            return total;
+        }
+
+        for (treatment t : treatmentList) {
+
+            if (t.getPriceLkr() != null) {
+                total = total.add(t.getPriceLkr());
+            }
+        }
+
+        return total;
+    }
+
+
+    public BigDecimal calculateBillTotal(List<treatment> treatmentList) {
+
+        return calculateTreatmentTotal(treatmentList)
+                .add(CONSULTATION_FEE);
+    }
+
     public boolean updateAppointment(appointment appt) {
 
         String updateSql =

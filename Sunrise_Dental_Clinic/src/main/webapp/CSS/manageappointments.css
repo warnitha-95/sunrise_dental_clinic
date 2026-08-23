@@ -48,6 +48,15 @@
     flex-wrap: wrap;
 }
 
+.action-btn.bill-btn {
+    background: #eef2ff;
+    color: #3949ab;
+}
+
+.action-btn.bill-btn:hover {
+    background: #dde3fb;
+}
+
 .dashboard-section .section-header p {
     display: inline-flex;
     align-items: center;

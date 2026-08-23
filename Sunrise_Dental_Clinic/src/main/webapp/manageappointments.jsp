@@ -73,7 +73,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
             </a>
         </li>
         <li>
-            <a href="billing.jsp">
+            <a href="bill.jsp">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>
@@ -96,6 +96,9 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
 <div class="main-content">
     <header>
         <div class="header-left">
+            <button class="mobile-menu" id="toggleMenu">
+                <i class="fas fa-bars"></i>
+            </button>
             <div>
                 <h2>
                     <i class="fas fa-calendar-check"></i>
@@ -169,7 +172,9 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                 <h3>No appointments yet</h3>
                 <p>Create a new appointment to get started.</p>
             </div>
+
         <% } else { %>
+
             <div class="table-wrapper">
                 <table class="appointments-table" id="appointmentsTable">
                     <thead>
@@ -213,6 +218,9 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                             <td>LKR <%= String.format("%,.2f", appt.getTotalPrice()) %></td>
                             <td><span class="<%= statusClass %>"><%= status %></span></td>
                             <td class="actions-cell">
+                                <a href="<%= request.getContextPath() %>/generateBill?id=<%= appt.getAppointmentId() %>" class="action-btn bill-btn" title="Print Bill">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </a>
                                 <a href="<%= request.getContextPath() %>/editAppointment?id=<%= appt.getAppointmentId() %>" class="action-btn edit-btn" title="Edit">
                                     <i class="fas fa-pen"></i>
                                 </a>
@@ -228,10 +236,13 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
                     </tbody>
                 </table>
             </div>
+
         <% } %>
+
     </section>
+
     <footer>
-        <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
+        <p>&copy; 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
         <span>Clinic Management System</span>
     </footer>
 </div>
@@ -246,6 +257,7 @@ if (toggleMenu) {
     });
 }
 </script>
+
 <script src="<%= request.getContextPath() %>/JS/manageappointments.js"></script>
 
 </body>
