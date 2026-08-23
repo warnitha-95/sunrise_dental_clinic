@@ -49,7 +49,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
 
     <ul class="sidebar-menu">
         <li>
-            <a href="adminhome.jsp">
+            <a href="adminhomes.jsp">
                 <i class="fas fa-chart-line"></i>
                 <span>Dashboard</span>
             </a>

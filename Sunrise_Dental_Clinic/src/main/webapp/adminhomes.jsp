@@ -1,18 +1,72 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.HttpSession"%>
+<%@ page import="services.patientService"%>
+<%@ page import="services.appointmentService"%>
+<%@ page import="model.appointment"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.math.BigDecimal"%>
+<%@ page import="java.util.Calendar"%>
 <%
 HttpSession sessionObj = request.getSession(false);
 
 if (sessionObj == null || sessionObj.getAttribute("loggedInAdmin") == null) {
-    response.sendRedirect("adminlogin.jsp");
+    response.sendRedirect(request.getContextPath() + "/adminlogin.jsp");
     return;
 }
 
 String adminName = (String) sessionObj.getAttribute("loggedInAdmin");
 
+patientService patientService = new patientService();
+appointmentService appointmentService = new appointmentService();
+
 int totalPatients = 0;
 int totalAppointments = 0;
 int todayAppointments = 0;
-double totalRevenue = 0.0;
+BigDecimal totalRevenue = BigDecimal.ZERO;
+
+try {
+
+    totalPatients = patientService.getAllPatients().size();
+
+    List<appointment> allAppointments = appointmentService.getAllAppointments();
+
+    totalAppointments = allAppointments.size();
+
+    Calendar todayStart = Calendar.getInstance();
+    todayStart.set(Calendar.HOUR_OF_DAY, 0);
+    todayStart.set(Calendar.MINUTE, 0);
+    todayStart.set(Calendar.SECOND, 0);
+    todayStart.set(Calendar.MILLISECOND, 0);
+
+    Calendar todayEnd = (Calendar) todayStart.clone();
+    todayEnd.add(Calendar.DAY_OF_MONTH, 1);
+
+    for (appointment appt : allAppointments) {
+
+        if (appt.getAppointmentDatetime() != null) {
+
+            long apptTime = appt.getAppointmentDatetime().getTime();
+
+            if (apptTime >= todayStart.getTimeInMillis() &&
+                apptTime < todayEnd.getTimeInMillis()) {
+
+                todayAppointments++;
+            }
+        }
+
+        if ("Completed".equalsIgnoreCase(appt.getStatus()) &&
+            appt.getTotalPrice() != null) {
+
+            totalRevenue = totalRevenue
+                    .add(appt.getTotalPrice())
+                    .add(appointmentService.CONSULTATION_FEE);
+        }
+    }
+
+} catch (Exception e) {
+
+    e.printStackTrace();
+}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +74,7 @@ double totalRevenue = 0.0;
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard | Sunrise Dental Clinic</title>
-<link rel="stylesheet" href="CSS/adminhomes.css">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/adminhomes.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -37,44 +91,44 @@ double totalRevenue = 0.0;
     </div>
 
     <ul class="sidebar-menu">
-        <li> 
-            <a href="adminhome.jsp" class="active">
-            <i class="fas fa-chart-line"></i>
+        <li>
+            <a href="<%= request.getContextPath() %>/adminhomes.jsp" class="active">
+                <i class="fas fa-chart-line"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li>
-            <a href="managepatients.jsp">
+            <a href="<%= request.getContextPath() %>/managepatients.jsp">
                 <i class="fas fa-user-injured"></i>
                 <span>Manage Patients</span>
             </a>
         </li>
         <li>
-            <a href="newappointments.jsp">
+            <a href="<%= request.getContextPath() %>/newappointments.jsp">
                 <i class="fas fa-calendar-plus"></i>
                 <span>New Appointment</span>
             </a>
         </li>
         <li>
-            <a href="manageappointments.jsp">
+            <a href="<%= request.getContextPath() %>/manageappointments.jsp">
                 <i class="fas fa-calendar-check"></i>
                 <span>All Appointments</span>
             </a>
         </li>
         <li>
-            <a href="billing.jsp">
+            <a href="<%= request.getContextPath() %>/bill.jsp">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>
         </li>
         <li>
-            <a href="help.jsp">
+            <a href="<%= request.getContextPath() %>/help.jsp">
                 <i class="fas fa-circle-question"></i>
                 <span>Help</span>
             </a>
         </li>
         <li class="logout-item">
-            <a href="adminlogout.jsp">
+            <a href="<%= request.getContextPath() %>/adminlogout.jsp">
                 <i class="fas fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>
@@ -111,7 +165,7 @@ double totalRevenue = 0.0;
             <p>Manage patients, appointments and billing efficiently from your dashboard.</p>
         </div>
 
-        <a href="registerappointment.jsp" class="appointment-btn">
+        <a href="<%= request.getContextPath() %>/newAppointment" class="appointment-btn">
             <i class="fas fa-calendar-plus"></i>
             Register Appointment
         </a>
@@ -157,8 +211,8 @@ double totalRevenue = 0.0;
             </div>
             <div class="card-info">
                 <h3>Total Revenue</h3>
-                <p>Rs. <%= String.format("%.2f", totalRevenue) %></p>
-                <span>Treatment revenue</span>
+                <p>Rs. <%= String.format("%,.2f", totalRevenue) %></p>
+                <span>Completed appointments</span>
             </div>
         </div>
     </div>
@@ -172,7 +226,7 @@ double totalRevenue = 0.0;
         </div>
 
         <div class="quick-actions">
-            <a href="registerappointment.jsp" class="quick-action">
+            <a href="<%= request.getContextPath() %>/newAppointment" class="quick-action">
                 <div class="quick-icon">
                     <i class="fas fa-calendar-plus"></i>
                 </div>
@@ -183,18 +237,18 @@ double totalRevenue = 0.0;
                 <i class="fas fa-arrow-right action-arrow"></i>
             </a>
 
-            <a href="appointmentdetails.jsp" class="quick-action">
+            <a href="<%= request.getContextPath() %>/manageappointments.jsp" class="quick-action">
                 <div class="quick-icon">
                     <i class="fas fa-search"></i>
                 </div>
                 <div>
                     <h3>Find Appointment</h3>
-                    <p>Search using appointment number</p>
+                    <p>Search appointments by patient, number, or dentist</p>
                 </div>
                 <i class="fas fa-arrow-right action-arrow"></i>
             </a>
 
-            <a href="billing.jsp" class="quick-action">
+            <a href="<%= request.getContextPath() %>/billing.jsp" class="quick-action">
                 <div class="quick-icon">
                     <i class="fas fa-calculator"></i>
                 </div>
@@ -205,12 +259,12 @@ double totalRevenue = 0.0;
                 <i class="fas fa-arrow-right action-arrow"></i>
             </a>
 
-            <a href="help.jsp" class="quick-action">
+            <a href="<%= request.getContextPath() %>/help.jsp" class="quick-action">
                 <div class="quick-icon">
                     <i class="fas fa-circle-question"></i>
                 </div>
                 <div>
-                    <h3>Help & Guide</h3>
+                    <h3>Help &amp; Guide</h3>
                     <p>View system instructions</p>
                 </div>
                 <i class="fas fa-arrow-right action-arrow"></i>
@@ -219,7 +273,7 @@ double totalRevenue = 0.0;
     </section>
 
     <footer>
-        <p>© 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
+        <p>&copy; 2026 Sunrise Dental Clinic. All Rights Reserved.</p>
         <span>Clinic Management System</span>
     </footer>
 </div>
@@ -228,9 +282,11 @@ double totalRevenue = 0.0;
 const toggleMenu = document.getElementById("toggleMenu");
 const sidebar = document.getElementById("sidebar");
 
-toggleMenu.addEventListener("click", function() {
-    sidebar.classList.toggle("collapsed");
-});
+if (toggleMenu) {
+    toggleMenu.addEventListener("click", function() {
+        sidebar.classList.toggle("collapsed");
+    });
+}
 </script>
 
 </body>

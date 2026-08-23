@@ -40,7 +40,7 @@ String adminName = (String) session.getAttribute("loggedInAdmin");
 
     <ul class="sidebar-menu">
         <li>
-            <a href="<%= request.getContextPath() %>/adminhome.jsp">
+            <a href="<%= request.getContextPath() %>/adminhomes.jsp">
                 <i class="fas fa-chart-line"></i>
                 <span>Dashboard</span>
             </a>
@@ -64,7 +64,7 @@ String adminName = (String) session.getAttribute("loggedInAdmin");
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/billing.jsp">
+            <a href="<%= request.getContextPath() %>/bill.jsp">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>

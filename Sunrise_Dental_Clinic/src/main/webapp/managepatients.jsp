@@ -81,7 +81,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/billing.jsp">
+            <a href="<%= request.getContextPath() %>/bill.jsp">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>
