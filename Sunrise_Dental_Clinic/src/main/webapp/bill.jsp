@@ -240,7 +240,6 @@ String printedAtText = printedFormat.format(new java.util.Date());
                             <%= String.format("%,.2f", t.getPriceLkr()) %>
                         </td>
                     </tr>
-
                     <%
                                 rowNumber++;
                             }

@@ -135,7 +135,6 @@ try {
         </li>
     </ul>
 </div>
-
 <div class="main-content">
     <header>
         <div class="header-left">
